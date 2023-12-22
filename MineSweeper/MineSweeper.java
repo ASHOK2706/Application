@@ -138,13 +138,8 @@ class GamePlay
 
         else
         {
-            
-            //printzero(x, y);
-
             int[][] visit=new int[n][n];
-
-            printZero(x,y,visit,n);
-            
+            printZero(x,y,visit,n);  
 
         for(int i=0;i<n;i++)
         {
@@ -154,7 +149,7 @@ class GamePlay
                 {
                     GamePlayBoard[i][j]=SetGameBoard.MineSweeperBoard[i][j];
                 }*/
-                System.out.print(visit[i][j]+" ");
+               // System.out.print(visit[i][j]+" ");
             }
             System.out.println();
         }
@@ -162,14 +157,6 @@ class GamePlay
 
           //  AssignValue(visit);
             
-
-
-
-
-
-
-
-
             printBoard();
         }
 
@@ -191,16 +178,9 @@ class GamePlay
         visit[x][y]=1;
 
         printZero(x-1,y,visit,n);   //North
-   
         printZero(x,y+1,visit,n);   //East
-   
         printZero(x+1,y,visit,n);  //South
-
-
-        printZero(x,y-1,visit,n);  //west
-        
-
-        
+        printZero(x,y-1,visit,n);  //west   
 
     }
     public void AssignValue(int[][] visit)
@@ -228,10 +208,7 @@ class GamePlay
                 }
             }
         }
-    }
-
-
-    
+    }  
     public boolean VictoryCheck()
     {
         for(int i=0;i<n;i++)
