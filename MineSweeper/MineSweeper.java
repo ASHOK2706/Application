@@ -113,8 +113,6 @@ class GamePlay
         
     }
     
-    //Stack stack=new Stack(1000);
-    //int[][] a=new int[1][2];
     public void playing(int x,int y)
     {
         if(SetGameBoard.MineSweeperBoard[x][y]=='*')
@@ -135,67 +133,43 @@ class GamePlay
             GamePlayBoard[x][y]=SetGameBoard.MineSweeperBoard[x][y];
             printBoard();
         }
-
         else
         {
-            int[][] visit=new int[n][n];
-            printZero(x,y,visit,n);  
-
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<n;j++)
-            {
-                /*if(visit[i][j]==1)
-                {
-                    GamePlayBoard[i][j]=SetGameBoard.MineSweeperBoard[i][j];
-                }*/
-               // System.out.print(visit[i][j]+" ");
-            }
-            System.out.println();
-        }
-
-
-          //  AssignValue(visit);
-            
+            boolean[][] visit=new boolean[n][n];
+            BackTrack(x,y,visit,n); 
             printBoard();
         }
 
     }
-    public void printZero(int x,int y,int[][] visit,int n)
+    public void BackTrack(int x,int y,boolean[][] visit,int n)
     {
-       
-        if(visit[x][y]==1)
-            return;
-        if(((0<=x&&x<=n-1)&&(0<=y&&y<=n-1)) &&   (SetGameBoard.MineSweeperBoard[x][y]!=0))
-        {
-                visit[x][y]=1;
-                return;
-            
-        }
+       System.out.println("hi");
         if(!((0<=x&&x<=n-1)&&(0<=y&&y<=n-1)))
             return;
 
-        visit[x][y]=1;
-
-        printZero(x-1,y,visit,n);   //North
-        printZero(x,y+1,visit,n);   //East
-        printZero(x+1,y,visit,n);  //South
-        printZero(x,y-1,visit,n);  //west   
-
-    }
-    public void AssignValue(int[][] visit)
-    {
-        for(int i=0;i<n;i++)
+        
+        if(!(visit[x][y]))
         {
-            for(int j=0;j<n;j++)
-            {
-                if(visit[i][j]==1)
-                {
-                    GamePlayBoard[i][j]=SetGameBoard.MineSweeperBoard[i][j];
-                }
-            }
+                if((SetGameBoard.MineSweeperBoard[x][y]!='0'))
+                    GamePlayBoard[x][y]=SetGameBoard.MineSweeperBoard[x][y];
+                return;
+            
         }
-    }
+
+        visit[x][y]=true;
+        GamePlayBoard[x][y]=SetGameBoard.MineSweeperBoard[x][y];
+        BackTrack(x-1,y,visit,n);   //North
+        BackTrack(x,y+1,visit,n);   //East
+        BackTrack(x+1,y,visit,n);  //South
+        BackTrack(x,y-1,visit,n);  //west 
+        BackTrack(x-1,y+1,visit,n);    //North-East
+        BackTrack(x+1,y+1,visit,n);    //South-East
+        BackTrack(x+1,y-1,visit,n);    //South-West
+        BackTrack(x-1,y-1,visit,n);    //North-West 
+
+        visit[x][y]=false; 
+
+    }    
     public void Lose()
     {
         for(int i=0;i<n;i++)
