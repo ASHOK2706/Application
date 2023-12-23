@@ -6,11 +6,13 @@ class SetGameBoard
 {
     static char[][] MineSweeperBoard;
     private int n;
-    Random rand=new Random();
-
-    public SetGameBoard(int n)
+    private int bomb;
+     Random rand=new Random();
+    public SetGameBoard(int n,int bomb)
     {
         this.n=n;
+        this.bomb=bomb;
+        System.out.println("\n You need to find "+bomb+" Bomb \n" );
         MineSweeperBoard = new char[n][n];
         for(int i=0;i<n;i++)
         {
@@ -26,7 +28,7 @@ class SetGameBoard
     public void CreatBoard()
     {
         int x,y;
-        for(int i=0;i<n;i++)
+        for(int i=0;i<bomb;i++)
         {
             x=rand.nextInt(n);
             y=rand.nextInt(n);
@@ -72,9 +74,6 @@ class SetGameBoard
             ++count;
         return count;
     }
- 
-        
-
     public void printBoard()
     {
         for(int i=0;i<n;i++)
@@ -87,9 +86,6 @@ class SetGameBoard
         }
     }
 }
-
-
-
 
 /*--------------------------------------------------------------------------------------------------------------------------- */
 /*--------------------------------------------------------------------------------------------------------------------------- */
@@ -141,6 +137,7 @@ class GamePlay
         }
 
     }
+    
     public void BackTrack(int x,int y,boolean[][] visit,int n)
     {
        System.out.println("hi");
@@ -228,9 +225,34 @@ public class MineSweeper
     public static void main(String[] args)
     {
         Scanner in=new Scanner(System.in);
-        SetGameBoard g=new SetGameBoard(9);
 
-        GamePlay play=new GamePlay(9);
+        System.out.println("Choose Dificulty Level ");
+        System.out.println("1  :  Easy    5X5");
+        System.out.println("2  :  Medium  7X7");
+        System.out.println("3  :  Hard    9X9");
+        int dificulty=in.nextInt();
+        int board_size=0;
+        switch(dificulty)
+        {
+            case 1:
+                SetGameBoard g=new SetGameBoard(5,3);
+                board_size=5;
+                break;
+            case 2:
+                SetGameBoard g1=new SetGameBoard(7,5);
+                board_size=7;
+                break;
+            case 3:
+                SetGameBoard g2=new SetGameBoard(9,9);
+                board_size=9;
+                break;
+            default:
+                System.out.println("Invalid Input");
+                System.exit(0);
+                break;
+        }
+
+        GamePlay play=new GamePlay(board_size);
         play.printBoard();
         
         while(true)
@@ -254,10 +276,6 @@ public class MineSweeper
                 System.out.println("==================================================");
 
             }
-        }
-
-
-     
+        } 
     }
-    static int[][] temp=new int[1][2];
 }
