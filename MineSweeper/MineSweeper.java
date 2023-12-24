@@ -23,7 +23,7 @@ class SetGameBoard
         }
         CreatBoard();
         OutPutBoard();
-        printBoard();
+        //printBoard();
     }
     public void CreatBoard()
     {
@@ -70,7 +70,7 @@ class SetGameBoard
     }
     public char MineCheckOut(char count,int x,int y)
     {
-        if(((0<=x&&x<=n-1)&&(0<=y&&y<=n-1)) && MineSweeperBoard[x][y]=='*')
+        if(((0 <= x && x <= n-1) && (0 <= y && y <= n-1)) && MineSweeperBoard[x][y]=='*')
             ++count;
         return count;
     }
@@ -86,11 +86,8 @@ class SetGameBoard
         }
     }
 }
-
 /*--------------------------------------------------------------------------------------------------------------------------- */
 /*--------------------------------------------------------------------------------------------------------------------------- */
-
-
 class GamePlay
 {
     private int n;
@@ -109,64 +106,92 @@ class GamePlay
         
     }
     
-    public void playing(int x,int y)
+    public void playing(int x,int y,char Ftype)
     {
-        if(SetGameBoard.MineSweeperBoard[x][y]=='*')
+        if(!((0 <= x && x <= n-1 && 0 <= y && y <= n-1) && (Ftype=='M' || Ftype=='F' || Ftype=='U')) )
         {
-            Lose();
-            printBoard();
-            System.out.println("######                 YOU                 ######");
-            System.out.println("######                 LOST                ######");
-            System.out.println("######                 THE                 ######");
-            System.out.println("######                 GAME                ######");
-            System.out.println();
-            System.out.println();
-            System.exit(0);
+            System.out.println("Invalid Input");
         }
+        else if(Ftype=='F')
+        {
+            Flag(x,y);
+            printBoard();
+        }
+        else if(Ftype=='U')
+        {
+            unFlag(x,y);
+            printBoard();
+        }
+        else if(Ftype=='M')
+        {
+            if(SetGameBoard.MineSweeperBoard[x][y]=='*')
+            {
+                Lose();
+                printBoard();
+                System.out.println("######                 YOU                 ######");
+                System.out.println("######                 LOST                ######");
+                System.out.println("######                 THE                 ######");
+                System.out.println("######                 GAME                ######");
+                System.out.println();
+                System.out.println();
+                System.exit(0);
+            }
 
-        else if(SetGameBoard.MineSweeperBoard[x][y]>'0')
-        {
-            GamePlayBoard[x][y]=SetGameBoard.MineSweeperBoard[x][y];
-            printBoard();
+            else if(SetGameBoard.MineSweeperBoard[x][y]>'0')
+            {
+                GamePlayBoard[x][y]=SetGameBoard.MineSweeperBoard[x][y];
+                printBoard();
+            }
+            else
+            {
+                boolean[][] visit=new boolean[n][n];
+                BackTrack(x,y,visit,n);
+                printBoard();
+            }
         }
-        else
-        {
-            boolean[][] visit=new boolean[n][n];
-            BackTrack(x,y,visit,n); 
-            printBoard();
-        }
+    
 
     }
-    
     public void BackTrack(int x,int y,boolean[][] visit,int n)
     {
-       System.out.println("hi");
-        if(!((0<=x&&x<=n-1)&&(0<=y&&y<=n-1)))
+        if (!(0 <= x && x <= n - 1 && 0 <= y && y <= n - 1) || visit[x][y]) {
             return;
-
-        
-        if(!(visit[x][y]))
-        {
-                if((SetGameBoard.MineSweeperBoard[x][y]!='0'))
-                    GamePlayBoard[x][y]=SetGameBoard.MineSweeperBoard[x][y];
-                return;
-            
         }
 
-        visit[x][y]=true;
-        GamePlayBoard[x][y]=SetGameBoard.MineSweeperBoard[x][y];
-        BackTrack(x-1,y,visit,n);   //North
-        BackTrack(x,y+1,visit,n);   //East
-        BackTrack(x+1,y,visit,n);  //South
-        BackTrack(x,y-1,visit,n);  //west 
-        BackTrack(x-1,y+1,visit,n);    //North-East
-        BackTrack(x+1,y+1,visit,n);    //South-East
-        BackTrack(x+1,y-1,visit,n);    //South-West
-        BackTrack(x-1,y-1,visit,n);    //North-West 
+        visit[x][y] = true;
 
-        visit[x][y]=false; 
+        if (SetGameBoard.MineSweeperBoard[x][y] == '0') {
+            GamePlayBoard[x][y] = SetGameBoard.MineSweeperBoard[x][y];
 
+            BackTrack(x - 1, y, visit, n);   // North
+            BackTrack(x, y + 1, visit, n);   // East
+            BackTrack(x + 1, y, visit, n);   // South
+            BackTrack(x, y - 1, visit, n);   // West
+            BackTrack(x - 1, y + 1, visit, n);    // North-East
+            BackTrack(x + 1, y + 1, visit, n);    // South-East
+            BackTrack(x + 1, y - 1, visit, n);    // South-West
+            BackTrack(x - 1, y - 1, visit, n);    // North-West
+        } else {
+            GamePlayBoard[x][y] = SetGameBoard.MineSweeperBoard[x][y];
+        }
+        visit[x][y] = false;
     }    
+    public void Flag(int x,int y)
+    {
+        if(GamePlayBoard[x][y]=='-')
+            GamePlayBoard[x][y]='F';
+        else if(GamePlayBoard[x][y]=='F')
+            System.out.println("Already Flaged");
+        else
+            System.out.println("Invalied Operation ");
+    }
+    public void unFlag(int x,int y)
+    {
+        if(GamePlayBoard[x][y]=='F')
+            GamePlayBoard[x][y]='-';
+        else 
+            System.out.println("Invalied Operation or Alreagy Un Flaged");
+    }
     public void Lose()
     {
         for(int i=0;i<n;i++)
@@ -196,8 +221,51 @@ class GamePlay
             }
         }
         return true;
+        
     }
-
+    public void VictoryFlag()
+    {
+         for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(SetGameBoard.MineSweeperBoard[i][j]=='*')
+                {
+                    GamePlayBoard[i][j]='F';
+                }
+            }
+        }
+    }
+    public boolean isFlagAndMineSame()
+    {
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(SetGameBoard.MineSweeperBoard[i][j]=='*')
+                {
+                    if(GamePlayBoard[i][j]=='F')
+                        continue;
+                    else
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+    public void AssignFullBoard()
+    {
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(GamePlayBoard[i][j]=='-')
+                {
+                    GamePlayBoard[i][j]=SetGameBoard.MineSweeperBoard[i][j];
+                }
+            }
+        }
+    }
     public void printBoard()
     {
         System.out.print("     ");
@@ -216,6 +284,8 @@ class GamePlay
             }
             System.out.println();
         }
+        System.out.println();
+        System.out.println();
     }
 
 }
@@ -224,58 +294,74 @@ public class MineSweeper
 {
     public static void main(String[] args)
     {
-        Scanner in=new Scanner(System.in);
 
-        System.out.println("Choose Dificulty Level ");
-        System.out.println("1  :  Easy    5X5");
-        System.out.println("2  :  Medium  7X7");
-        System.out.println("3  :  Hard    9X9");
-        int dificulty=in.nextInt();
-        int board_size=0;
-        switch(dificulty)
-        {
-            case 1:
-                SetGameBoard g=new SetGameBoard(5,3);
-                board_size=5;
-                break;
-            case 2:
-                SetGameBoard g1=new SetGameBoard(7,5);
-                board_size=7;
-                break;
-            case 3:
-                SetGameBoard g2=new SetGameBoard(9,9);
-                board_size=9;
-                break;
-            default:
-                System.out.println("Invalid Input");
-                System.exit(0);
-                break;
-        }
+        char playAgain;
+        do{
+            Scanner in=new Scanner(System.in);
 
-        GamePlay play=new GamePlay(board_size);
-        play.printBoard();
-        
-        while(true)
-        {
-            System.out.print("Enter the Row and Column :  ");
-            int x=in.nextInt();
-            int y=in.nextInt();
-
-            play.playing(x,y);
-
-            if(play.VictoryCheck())
+            System.out.println("Choose Dificulty Level ");
+            System.out.println("1  :  Easy    5X5");
+            System.out.println("2  :  Medium  7X7");
+            System.out.println("3  :  Hard    9X9");
+            int dificulty=in.nextInt();
+            int board_size=0;
+            switch(dificulty)
             {
-                System.out.println("==================================================");
-                System.out.println("##################################################");
-                System.out.println();
-                System.out.println();
-                System.out.println("  ******          YOU WON THE GAME         ******   ");
-                System.out.println();
-                System.out.println();
-                System.out.println("##################################################");
-                System.out.println("==================================================");
-
+                case 1:
+                    SetGameBoard g=new SetGameBoard(5,3);
+                    board_size=5;
+                    break;
+                case 2:
+                    SetGameBoard g1=new SetGameBoard(7,5);
+                    board_size=7;
+                    break;
+                case 3:
+                    SetGameBoard g2=new SetGameBoard(9,9);
+                    board_size=9;
+                    break;
+                default:
+                    System.out.println("Invalid Input");
+                    System.exit(0);
+                    break;
             }
-        } 
+
+            GamePlay play=new GamePlay(board_size);
+            play.printBoard();
+            boolean loop=true;
+            while(loop)
+            {
+                System.out.print("Enter the Row and Column with Function type Ex:( (1 1 M) || (1 1 F) || (1 1 U)) :  ");
+                int x=in.nextInt();
+                int y=in.nextInt();
+                char Ftype=in.next().charAt(0);
+                System.out.println();
+
+                play.playing(x,y,Ftype);
+
+
+                if(play.VictoryCheck() || play.isFlagAndMineSame())
+                {
+                    if(play.isFlagAndMineSame())
+                        play.AssignFullBoard();
+                    if(play.VictoryCheck())
+                        play.VictoryFlag();
+                    play.printBoard();
+                    System.out.println("==================================================");
+                    System.out.println("##################################################");
+                    System.out.println();
+                    System.out.println();
+                    System.out.println("  ******          YOU WON THE GAME         ******   ");
+                    System.out.println();
+                    System.out.println();
+                    System.out.println("##################################################");
+                    System.out.println("==================================================");
+                    loop=false;
+
+                }
+            } 
+        
+            System.out.print("If you want to play again (y/n) :");
+            playAgain=in.next().charAt(0);
+        }while(playAgain=='y');
     }
 }
