@@ -22,15 +22,11 @@ class GamePlay
                 this.Pos=arr[i][1];
                 return true;
             }
-
-            
-
         }
         return false;
     }
     public boolean isLaddderOrSnake(int n)
     {
-        
         int[][] Ladder ={ {1,38},{4,14},{8,10},{21,42},{28,76},{50,67},{71,92},{86,99} } ;
         int[][] Snake={ {32,10},{36,6},{48,26},{63,18},{88,24},{95,56},{97,78}, };
 
@@ -44,10 +40,8 @@ class GamePlay
         {
             return true;
         }
-
         return false;
     }
-    
     public void display()
     {
         System.out.println("-------------------------------------------------------------------");
@@ -105,14 +99,10 @@ class GamePlay
                 loop=false;
 
             }
-
-    
-
-
             if(this.count>0)
             {
                 
-                if(dicevalue==1 || dicevalue==5 || dicevalue==6)
+                if(dicevalue==1|| dicevalue==6)
                 {
                     System.out.println("You got dice "+dicevalue+" Enter to Roll Dice Again !!!!");
                     in.nextLine();
@@ -152,7 +142,6 @@ class GamePlay
     }
 }
 public class SnakeAndLadder {
-
     public static void main(String[] args)
     {
         Scanner in=new Scanner (System.in);
@@ -166,17 +155,18 @@ public class SnakeAndLadder {
             Players[i]=in.next();
 
         }
+
         GamePlay[] gameplay_arr=new GamePlay[No_of_Players];
         for(int i=0;i<No_of_Players;i++)
         {
             gameplay_arr[i]=new GamePlay(Players[i]);            
 
         }
-
        for(int i=0;i<No_of_Players;i++)
        {
 
             System.out.println("\n" +Players[i] + " turn (Press Enter to Roll Dice) : ");
+            
             in.nextLine();
 
             gameplay_arr[i].RollDice();
